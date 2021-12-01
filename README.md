@@ -22,3 +22,5 @@ This is called jhud3 due to its a little bit different from the normal jhud, and
 
 * https://cdn.discordapp.com/attachments/870373957222690856/915572794912309268/unknown.png - cs:s picture
 * https://cdn.discordapp.com/attachments/722589978747731998/915580438578360340/unknown.png - cs:go picture
+
+* this is just things from ssj that i copied into jhud and i wanted to share it with other people, some of the changes is probably not even needed
