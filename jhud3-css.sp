@@ -862,6 +862,8 @@ void JHUD_DrawStats(int client, int target)
 		Format(slowbuffer, sizeof(slowbuffer), "");
 	}
 	
+	float sync = 100.0 * g_iSyncedTick[target] / g_strafeTick[target];
+
 	char sMessage[256];
 	if(g_bExtraJumps[client])
 	{
@@ -886,13 +888,13 @@ void JHUD_DrawStats(int client, int target)
 			
 			if(!IsNaN(totalPercent) && g_bStrafeSpeed[client])
 			{
-				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, 100.0 * g_iSyncedTick[target] / g_strafeTick[target], slowbuffer);
+				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, sync, slowbuffer);
 			}
 			else
 			{
 				if(g_iJump[target] > 1)
 				{
-					Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, 100.0 * g_iSyncedTick[target] / g_strafeTick[target], slowbuffer);
+					Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, sync, slowbuffer);
 				}
 				else
 				{
@@ -921,11 +923,11 @@ void JHUD_DrawStats(int client, int target)
 			
 			if(!IsNaN(totalPercent) && g_bStrafeSpeed[client])
 			{
-				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, 100.0 * g_iSyncedTick[target] / g_strafeTick[target], slowbuffer);
+				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, sync, slowbuffer);
 			}
 			else
 			{
-				Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, 100.0 * g_iSyncedTick[target] / g_strafeTick[target], slowbuffer);
+				Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, sync, slowbuffer);
 			}
 		}
 	}
@@ -952,13 +954,13 @@ void JHUD_DrawStats(int client, int target)
 			
 			if(!IsNaN(totalPercent) && g_bStrafeSpeed[client])
 			{
-				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, 100.0 * g_iSyncedTick[target] / g_strafeTick[target], slowbuffer);
+				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, sync, slowbuffer);
 			}
 			else
 			{
 				if(g_iJump[target] > 1)
 				{
-					Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, 100.0 * g_iSyncedTick[target] / g_strafeTick[target], slowbuffer);
+					Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, sync, slowbuffer);
 				}
 				else
 				{
@@ -987,11 +989,11 @@ void JHUD_DrawStats(int client, int target)
 			
 			if(!IsNaN(totalPercent) && g_bStrafeSpeed[client])
 			{
-				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, 100.0 * g_iSyncedTick[target] / g_strafeTick[target], slowbuffer);
+				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, sync, slowbuffer);
 			}
 			else
 			{
-				Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, 100.0 * g_iSyncedTick[target] / g_strafeTick[target], slowbuffer);
+				Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, sync, slowbuffer);
 			}
 		}
 	}
