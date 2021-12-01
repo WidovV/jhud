@@ -10,3 +10,11 @@
 * [One](http://steamcommunity.com/profiles/76561197990045384) - Functionality of beta versions menus
 * [Dream](http://steamcommunity.com/profiles/76561198117224444) - Suggesting the constant speeds addition
 * [Appa](http://steamcommunity.com/profiles/76561198181408938) - Providing helpful feedback
+
+----------------------------
+# jhud3 
+This isnt gonna be a pull-request to the normal jhud due to there isnt any way to toggle the features i made on/off, and some of it is kinda scuffed.
+This is called jhud3 due to its a little bit different from the normal jhud, and there is already a fork called jhud-2.
+
+`Sync` - i added sync right beside the gain, so it will show like this: https://cdn.discordapp.com/attachments/870373957222690856/915572794912309268/unknown.png
+`csgo-port` - I added new numbers to the jhud, so it fits cs:go, i also changed the normal 16th jump where it would show an color based on speed to the 12th jump.
