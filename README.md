@@ -13,7 +13,7 @@
 
 ----------------------------
 # jhud3 
-This isnt gonna be a pull-request to the normal jhud due to there isnt any way to toggle the features i made on/off, and some of it is kinda scuffed.
+This isnt gonna be a pull-request to the normal jhud due to ~~there isnt any way to toggle the features i made on/off~~, and some of it is kinda scuffed.
 This is called jhud3 due to its a little bit different from the normal jhud, and there is already a fork called jhud-2.
 
 * `Sync` - i added sync right beside the gain.
