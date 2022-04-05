@@ -24,6 +24,7 @@ Handle g_hCookieJHUD;
 Handle g_hCookieJHUDPosition;
 Handle g_hCookieStrafeSpeed;
 Handle g_hCookieExtraJumps;
+Handle g_hCookieSync;
 Handle g_hCookieSpeedDisplay;
 Handle g_hCookie60;
 Handle g_hCookie6070;
@@ -36,12 +37,14 @@ bool g_bConstSpeedType[MAXPLAYERS + 1];
 bool g_bJHUD[MAXPLAYERS + 1];
 bool g_bStrafeSpeed[MAXPLAYERS + 1];
 bool g_bExtraJumps[MAXPLAYERS + 1];
+bool g_bSync[MAXPLAYERS + 1];
 bool g_bSpeedDisplay[MAXPLAYERS + 1];
 int g_iJHUDPosition[MAXPLAYERS + 1];
 int g_i60[MAXPLAYERS + 1];
 int g_i6070[MAXPLAYERS + 1];
 int g_i7080[MAXPLAYERS + 1];
 int g_i80[MAXPLAYERS + 1];
+//int g_iTarget[MAXPLAYERS + 1];
 
 char lastChoice[MAXPLAYERS + 1];
 
@@ -100,7 +103,6 @@ int values[][3] = {
 	{780, 790, 870},  	// 10
 	{810, 820, 915},  	// 11
 	{920, 940, 960}	// 12
-
 };
 
 public void OnAllPluginsLoaded()
@@ -118,6 +120,7 @@ public void OnPluginStart()
 	g_hCookieJHUDPosition = 	RegClientCookie("jhud_position", "jhud_position", CookieAccess_Protected);
 	g_hCookieStrafeSpeed = 		RegClientCookie("jhud_strafespeed", "jhud_strafespeed", CookieAccess_Protected);
 	g_hCookieExtraJumps = 		RegClientCookie("jhud_extrajumps", "jhud_extrajumps", CookieAccess_Protected);
+	g_hCookieSync =				RegClientCookie("jhud_sync", "jhud_sync", CookieAccess_Protected);
 	g_hCookieSpeedDisplay = 	RegClientCookie("jhud_speeddisp", "jhud_speeddisp", CookieAccess_Protected);
 	g_hCookie60 = 				RegClientCookie("jhud_60", "jhud_60", CookieAccess_Protected);
 	g_hCookie6070 = 			RegClientCookie("jhud_6070", "jhud_6070", CookieAccess_Protected);
@@ -145,11 +148,12 @@ public void OnClientCookiesCached(int client)
 	{
 		SetCookie(client, g_hCookieConstantSpeed, false);
 		SetCookie(client, g_hCookieConstSpeedType, false);
-		SetCookie(client, g_hCookieJHUD, false);
-		SetCookie(client, g_hCookieStrafeSpeed, false);
+		SetCookie(client, g_hCookieJHUD, true);
+		SetCookie(client, g_hCookieStrafeSpeed, true);
 		SetCookie(client, g_hCookieExtraJumps, false);
+		SetCookie(client, g_hCookieSync, true);
 		SetCookie(client, g_hCookieSpeedDisplay, false);
-		SetCookie(client, g_hCookieJHUDPosition, 0);
+		SetCookie(client, g_hCookieJHUDPosition, 1);
 		SetCookie(client, g_hCookie60, Red);
 		SetCookie(client, g_hCookie6070, Orange);
 		SetCookie(client, g_hCookie7080, Green);
@@ -171,6 +175,9 @@ public void OnClientCookiesCached(int client)
 	
 	GetClientCookie(client, g_hCookieExtraJumps, strCookie, sizeof(strCookie));
 	g_bExtraJumps[client] = view_as<bool>(StringToInt(strCookie));
+
+	GetClientCookie(client, g_hCookieSync, strCookie, sizeof(strCookie));
+	g_bSync[client] = view_as<bool>(StringToInt(strCookie));
 	
 	GetClientCookie(client, g_hCookieSpeedDisplay, strCookie, sizeof(strCookie));
 	g_bSpeedDisplay[client] = view_as<bool>(StringToInt(strCookie));
@@ -451,11 +458,20 @@ void ShowJHUDDisplayOptionsMenu(int client, int position = 0)
 	
 	if(g_bExtraJumps[client])
 	{
-		AddMenuItem(menu, "extrajumps", "Extra Jumps: [ON]\n \n");
+		AddMenuItem(menu, "extrajumps", "Extra Jumps: [ON]");
 	}
 	else
 	{
-		AddMenuItem(menu, "extrajumps", "Extra Jumps: [OFF]\n \n");
+		AddMenuItem(menu, "extrajumps", "Extra Jumps: [OFF]");
+	}
+
+	if(g_bSync[client])
+	{
+		AddMenuItem(menu, "sync", "Sync: [ON]\n \n");
+	}
+	else
+	{
+		AddMenuItem(menu, "sync", "Sync: [OFF]\n \n");
 	}
 	
 	AddMenuItem(menu, "constspeed", "Constant Speed Settings");
@@ -507,6 +523,12 @@ public int JHUDDisplayOptionsMenu_Handler(Menu menu, MenuAction action, int clie
 		else if(StrEqual(info, "constspeed"))
 		{
 			ShowJHUDConstSpeedMenu(client);
+		}
+		else if(StrEqual(info, "sync"))
+		{
+			g_bSync[client] = !g_bSync[client];
+			SetCookie(client, g_hCookieSync, g_bSync[client]);
+			ShowJHUDDisplayOptionsMenu(client);
 		}
 		else if(StrEqual(info, "colors"))
 		{
@@ -738,10 +760,11 @@ void JHUD_ResetValues(int client)
 {
 	g_bConstSpeed[client] = false;
 	g_bConstSpeedType[client] = false;
-	g_bStrafeSpeed[client] = false;
+	g_bStrafeSpeed[client] = true;
 	g_bExtraJumps[client] = false;
+	g_bSync[client] = true;
 	g_bSpeedDisplay[client] = false;
-	g_iJHUDPosition[client] = 0;
+	g_iJHUDPosition[client] = 1;
 	g_i60[client] = Red;
 	g_i6070[client] = Orange;
 	g_i7080[client] = Green;
@@ -751,6 +774,7 @@ void JHUD_ResetValues(int client)
 	SetCookie(client, g_hCookieConstSpeedType, g_bConstSpeedType[client]);
 	SetCookie(client, g_hCookieStrafeSpeed, g_bStrafeSpeed[client]);
 	SetCookie(client, g_hCookieExtraJumps, g_bExtraJumps[client]);
+	SetCookie(client, g_hCookieSync, g_bSync[client]);
 	SetCookie(client, g_hCookieSpeedDisplay, g_bSpeedDisplay[client]);
 	SetCookie(client, g_hCookieJHUDPosition, g_iJHUDPosition[client]);
 	SetCookie(client, g_hCookie60, g_i60[client]);
@@ -858,12 +882,12 @@ void JHUD_DrawStats(int client, int target)
 		Format(slowbuffer, sizeof(slowbuffer), "");
 	}
 	
-	char sMessage[256];
 	float sync = 100.0 * g_iSyncedTick[target] / g_strafeTick[target];
 
+	char sMessage[256];
 	if(g_bExtraJumps[client])
 	{
-		if(g_iJump[target] <= 16)
+		if(g_iJump[target] <= 12)
 		{
 			if(RoundToFloor(GetVectorLength(velocity)) < values[g_iJump[target]][0])
 			{
@@ -882,15 +906,23 @@ void JHUD_DrawStats(int client, int target)
 				rgb = colors[g_i80[client]];
 			}
 			
-			if(!IsNaN(totalPercent) && g_bStrafeSpeed[client])
+			if(!IsNaN(totalPercent) && g_bStrafeSpeed[client] && g_bSync[client])
 			{
 				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, sync, slowbuffer);
 			}
+			else if(!IsNaN(totalPercent) && g_bStrafeSpeed[client] && !g_bSync[client])
+			{
+				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, slowbuffer);
+			}
 			else
 			{
-				if(g_iJump[target] > 1)
+				if(g_iJump[target] > 1 && g_bSync[client])
 				{
 					Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, sync, slowbuffer);
+				}
+				else if(g_iJump[target] > 1 && !g_bSync[client])
+				{
+					Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, sync, slowbuffer);
 				}
 				else
 				{
@@ -917,13 +949,24 @@ void JHUD_DrawStats(int client, int target)
 				rgb = colors[g_i80[client]];
 			}
 			
-			if(!IsNaN(totalPercent) && g_bStrafeSpeed[client])
+			if(!IsNaN(totalPercent) && g_bStrafeSpeed[client] && g_bSync[client])
 			{
 				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, sync, slowbuffer);
 			}
-			else
+			else if(!IsNaN(totalPercent) && g_bStrafeSpeed[client] && !g_bSync[client])
 			{
-				Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, sync, slowbuffer);
+				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, slowbuffer);
+			}
+			else
+			{	
+				if (g_bSync[client])
+				{
+					Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, sync, slowbuffer);
+				}
+				else
+				{
+					Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, slowbuffer);
+				}
 			}
 		}
 	}
@@ -948,15 +991,23 @@ void JHUD_DrawStats(int client, int target)
 				rgb = colors[g_i80[client]];
 			}
 			
-			if(!IsNaN(totalPercent) && g_bStrafeSpeed[client])
+			if(!IsNaN(totalPercent) && g_bStrafeSpeed[client] && g_bSync[client])
 			{
 				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, sync, slowbuffer);
 			}
+			else if(!IsNaN(totalPercent) && g_bStrafeSpeed[client] && !g_bSync[client])
+			{
+				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, slowbuffer);
+			}
 			else
 			{
-				if(g_iJump[target] > 1)
+				if(g_iJump[target] > 1 && g_bSync[client])
 				{
 					Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, sync, slowbuffer);
+				}
+				else if(g_iJump[target] > 1 && !g_bSync[client])
+				{
+					Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, slowbuffer);
 				}
 				else
 				{
@@ -983,13 +1034,24 @@ void JHUD_DrawStats(int client, int target)
 				rgb = colors[g_i80[client]];
 			}
 			
-			if(!IsNaN(totalPercent) && g_bStrafeSpeed[client])
+			if(!IsNaN(totalPercent) && g_bStrafeSpeed[client] && g_bSync[client])
 			{
 				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, sync, slowbuffer);
 			}
+			else if(!IsNaN(totalPercent) && g_bStrafeSpeed[client] && !g_bSync[client])
+			{
+				Format(sMessage, sizeof(sMessage), "%i: %i (%.0f%%%%)\n%s%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), totalPercent, fastbuffer, coeffsum, slowbuffer);
+			}
 			else
 			{
-				Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, sync, slowbuffer);
+				if(g_bSync[client])
+				{
+					Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%|%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, sync, slowbuffer);
+				}
+				else
+				{
+					Format(sMessage, sizeof(sMessage), "%i: %i\n%s%.2f%%%s", g_iJump[target], RoundToFloor(GetVectorLength(velocity)), fastbuffer, coeffsum, slowbuffer);
+				}
 			}
 		}
 	}
