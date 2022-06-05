@@ -17,8 +17,8 @@ This isnt gonna be a pull-request to the normal jhud due to ~~there isnt any way
 This is called jhud3 due to its a little bit different from the normal jhud, and there is already a fork called jhud-2.
 
 * `Sync` - i added sync right beside the gain.
-* `csgo-port` - I added new numbers to the jhud, so it fits cs:go, i also changed the normal 16th jump where it would show an color based on speed to the 12th jump.
-* `css-only` - I added a livegain to the constant speed setting, showing ur gain in a more "real-time" version, i had some mixed player-feedbacks about that part.
+* `128-tick` - I added new numbers to the jhud, so it fits cs:go/128-tick, i also changed the normal 16th jump where it would show an color based on speed to the 12th jump.
+* `100-tick` - I added a livegain to the constant speed setting, showing ur gain in a more "real-time" version, i had some mixed player-feedbacks about that part.
 
 * https://cdn.discordapp.com/attachments/870373957222690856/915572794912309268/unknown.png - cs:s picture
 * https://cdn.discordapp.com/attachments/722589978747731998/915580438578360340/unknown.png - cs:go picture
